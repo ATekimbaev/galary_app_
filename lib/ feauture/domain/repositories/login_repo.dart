@@ -5,7 +5,9 @@ class LoginRepo {
   const LoginRepo({required this.dio});
   final Dio dio;
 
-  Future logIn({required String name, }) async {
+  Future logIn({
+    required String name,
+  }) async {
     final result = await dio.post('api/clients', data: {
       "name": name,
       "allowedGrantTypes": ["password", "refresh_token"]
@@ -13,23 +15,28 @@ class LoginRepo {
 
     final jsonList = result.data;
     final LogInModel clientSecret = LogInModel.fromJson(jsonList);
-  return clientSecret;
-
+    return clientSecret;
   }
 
-      Future getToken({required String name, required String password,required String secret, required int id,required String randomId, }) async {
-      final result = await dio.get(
-          '/oauth/v2/token',
-          queryParameters: {
-            "clientId": "${id}_$randomId",
-            "grantType": "password",
-            "username": name,
-            'password': password,
-            "clientSecret": secret,
-          });
+  Future getToken({
+    required String name,
+    required String password,
+    required String secret,
+    required int id,
+    required String randomId,
+  }) async {
+    final result = await dio.get(
+      '/oauth/v2/token',
+      queryParameters: {
+        "client_id": "${id}_$randomId",
+        "grant_type": "password",
+        "username": name,
+        'password': password,
+        "client_secret": secret,
+      },
+    );
 
-      final jsonList = result.data;
-      final LogInModel tokens = LogInModel.fromJson(jsonList);
-      return tokens;
-    }
+    final TokenModel tokens = TokenModel.fromJson(result.data);
+    return tokens;
+  }
 }

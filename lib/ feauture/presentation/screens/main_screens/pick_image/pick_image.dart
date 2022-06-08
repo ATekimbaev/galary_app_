@@ -57,14 +57,14 @@ class _PickImageState extends State<PickImage> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                InputWidget(
+                InputWidget(func: (){},
                   hintText: 'Name',
                   controller: controller,
                 ),
                 const SizedBox(
                   height: 15,
                 ),
-                InputWidget(
+                InputWidget(func: (){},
                   hintText: 'Description',
                   controller: controller,
                 ),

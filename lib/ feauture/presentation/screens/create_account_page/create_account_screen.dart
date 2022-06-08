@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:gallary_app/%20feauture/presentation/bloc/photo_bloc/photo_bloc.dart';
 import 'package:gallary_app/%20feauture/presentation/screens/main_screens/bottom_navigation_bar/bottom_bar.dart';
 import 'package:gallary_app/%20feauture/presentation/theme/colors.dart';
 import 'package:gallary_app/%20feauture/presentation/theme/fonts.dart';
 import 'package:gallary_app/%20feauture/presentation/widgets/app_button.dart';
 import 'package:gallary_app/%20feauture/presentation/widgets/input_widget.dart';
-
-import '../../../data/dio_settings.dart';
-import '../../../domain/repositories/photo_repo.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
@@ -43,23 +41,46 @@ class _CreateAccountState extends State<CreateAccount> {
               const SizedBox(
                 height: 14,
               ),
-              InputWidget(controller: userNameController, hintText: 'Username*'),
+              InputWidget(
+                  func: () {},
+                  controller: userNameController,
+                  hintText: 'Username*'),
               const SizedBox(
                 height: 10,
               ),
-              InputWidget(controller: birthDayController, hintText: 'Birthday'),
+              InputWidget(
+                  func: () {DatePicker.showDatePicker(context,
+                              showTitleActions: true,
+                              minTime: DateTime(1990-06-01-19-12-30,),
+                              maxTime: DateTime(2022-06-01-19-12-30,), onChanged: (date) {
+                            return date;
+                          }, onConfirm: (date) {
+                            return date;
+                          }, currentTime: DateTime.now(), locale: LocaleType.ru);
+    },
+                  controller: birthDayController,
+                  hintText: 'Birthday'),
               const SizedBox(
                 height: 10,
               ),
-              InputWidget(controller: emailController, hintText: 'E-mail*'),
+              InputWidget(
+                  func: () {},
+                  controller: emailController,
+                  hintText: 'E-mail*'),
               const SizedBox(
                 height: 10,
               ),
-              InputWidget(controller: passwoordController, hintText: 'Password*'),
+              InputWidget(
+                  func: () {},
+                  controller: passwoordController,
+                  hintText: 'Password*'),
               const SizedBox(
                 height: 10,
               ),
-              InputWidget(controller: confrimPasswordController, hintText: 'Confirm password*'),
+              InputWidget(
+                  func: () {},
+                  controller: confrimPasswordController,
+                  hintText: 'Confirm password*'),
               const SizedBox(
                 height: 40,
               ),
@@ -86,5 +107,4 @@ class _CreateAccountState extends State<CreateAccount> {
       ),
     );
   }
-
 }

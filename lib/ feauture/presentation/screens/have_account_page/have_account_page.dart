@@ -4,6 +4,7 @@ import 'package:gallary_app/%20feauture/data/dio_settings.dart';
 import 'package:gallary_app/%20feauture/domain/repositories/photo_repo.dart';
 import 'package:gallary_app/%20feauture/presentation/bloc/have_account/have_account_bloc.dart';
 import 'package:gallary_app/%20feauture/presentation/screens/create_account_page/create_account_screen.dart';
+import 'package:gallary_app/%20feauture/presentation/screens/error_screen/error_screen.dart';
 import 'package:gallary_app/%20feauture/presentation/screens/main_screens/feed_screen/feed_screen.dart';
 import 'package:gallary_app/%20feauture/presentation/theme/colors.dart';
 import 'package:gallary_app/%20feauture/presentation/theme/fonts.dart';
@@ -41,6 +42,7 @@ class _HaveAccountState extends State<HaveAccount> {
               height: 14,
             ),
             InputWidget(
+              func: () {},
               controller: emailController,
               hintText: 'E-mail',
             ),
@@ -48,6 +50,7 @@ class _HaveAccountState extends State<HaveAccount> {
               height: 10,
             ),
             InputWidget(
+              func: () {},
               controller: passwordController,
               hintText: 'Password',
             ),
@@ -63,25 +66,33 @@ class _HaveAccountState extends State<HaveAccount> {
                       context,
                       MaterialPageRoute(
                           builder: (_) => MultiBlocProvider(
-                            providers: [
-                              BlocProvider(
-                                create: (_) => PhotoBloc(
-                                  repo: PhotoRepo(
-                                    dio: DioSettings().dio,
+                                providers: [
+                                  BlocProvider(
+                                    create: (_) => PhotoBloc(
+                                      repo: PhotoRepo(
+                                        dio: DioSettings().dio,
+                                      ),
+                                    )..add(PhotoLoadEvent()),
                                   ),
-                                )..add(PhotoLoadEvent()),
-                              ),
-                            ],
-                            child: const HomePage(),
-                          )),
+                                ],
+                                child: const HomePage(),
+                              )),
                     );
-                  } 
+                  } else if (state is LoginErrorState) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HaveAccount()),
+                    );
+                  }
                 },
                 builder: (context, state) {
                   return AppButton(
                       func: () {
-                        BlocProvider.of<HaveAccountBloc>(context).add(LogInEvent(
-                            email: emailController.text, password: passwordController.text));
+                        BlocProvider.of<HaveAccountBloc>(context).add(
+                            LogInEvent(
+                                email: emailController.text,
+                                password: passwordController.text));
                       },
                       text: Text(
                         'Log In',
@@ -110,7 +121,8 @@ class _HaveAccountState extends State<HaveAccount> {
                 builder: (context, state) {
                   return TextButton(
                     onPressed: () {
-                      BlocProvider.of<HaveAccountBloc>(context).add(CreateAccountEvent());
+                      BlocProvider.of<HaveAccountBloc>(context)
+                          .add(CreateAccountEvent());
                     },
                     child: Text(
                       'Create account',

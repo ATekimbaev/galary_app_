@@ -5,14 +5,17 @@ class InputWidget extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.hintText,
+    required this.func
   }) : super(key: key);
 
  final TextEditingController controller;
   final String hintText;
+  final Function() func;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTap: func,
       controller: controller,
       decoration: InputDecoration(
         hintText: hintText,

@@ -5,7 +5,12 @@ import 'package:gallary_app/%20feauture/domain/repositories/login_repo.dart';
 class HaveAccountBloc extends Bloc<HaveAccountEvent, HaveAccountState> {
   HaveAccountBloc({required this.repo}) : super(CreateAccountState()) {
     on<CreateAccountEvent>(_createAccount);
-    on<LogInEvent>(_getSecret);
+
+    try {
+      on<LogInEvent>(_getSecret);
+    } catch (e) {
+      emit(LoginErrorState()); 
+    }
   }
   late final LoginRepo repo;
   Future<void> _createAccount(event, Emitter<HaveAccountState> emit) async {
@@ -23,9 +28,10 @@ class HaveAccountBloc extends Bloc<HaveAccountEvent, HaveAccountState> {
         id: getClientSecret.id,
         randomId: getClientSecret.randomId);
     Future.delayed(const Duration(seconds: 2));
-    emit(LoginSuccesState(result: getToken));
+    emit(LoginSuccesState(
+        refreshToken: getToken.refreshToken,
+        acsessToken: getToken.accessToken));
   }
-  
 }
 
 abstract class HaveAccountState {}
@@ -35,8 +41,12 @@ class CreateAccountState extends HaveAccountState {}
 class LogInState extends HaveAccountState {}
 
 class LoginSuccesState extends HaveAccountState {
-  final dynamic result;
-  LoginSuccesState({required this.result});
+  final String refreshToken;
+  final String acsessToken;
+  LoginSuccesState({
+    required this.refreshToken,
+    required this.acsessToken,
+  });
 }
 
 class LoginErrorState extends HaveAccountState {}
